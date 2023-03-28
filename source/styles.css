@@ -1,0 +1,174 @@
+
+/* ========== RESET ========== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  outline: 1px solid red;
+  margin: 0;
+  padding: 0;
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+html {
+  min-height: 100vh;
+}
+
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+}
+
+img, picture, video, canvas, svg {
+  max-width: 100%;
+  display: block;
+}
+
+label, input, button, textarea, select {
+  font: inherit;
+  display: block;
+  /* width: 100%; */
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+ul, li {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========== VARIABLES ========== */
+
+:root {
+  --font-main: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;;
+  
+  --color-dark: black;
+  --color-light: white;
+
+  --text-100: clamp(0.78rem, calc(0.77rem + 0.03vw), 0.80rem);
+  --text-200: clamp(0.94rem, calc(0.92rem + 0.11vw), 1.00rem);
+  --text-300: clamp(1.13rem, calc(1.08rem + 0.22vw), 1.25rem);
+  --text-400: clamp(1.35rem, calc(1.28rem + 0.37vw), 1.56rem);
+  --text-500: clamp(1.62rem, calc(1.50rem + 0.58vw), 1.95rem);
+  --text-600: clamp(1.94rem, calc(1.77rem + 0.87vw), 2.44rem);
+  --text-700: clamp(2.33rem, calc(2.08rem + 1.25vw), 3.05rem);
+  --text-800: clamp(2.80rem, calc(2.45rem + 1.77vw), 3.82rem);
+}
+
+/* ========== BASE ==========  */
+
+body {
+  font-family: var(--font-main);
+  font-size: var(--text-300);
+  line-height: 1;
+  letter-spacing: .15rem;
+}
+
+/* ========== TEXT ========== */
+
+.text-100 {
+  font-size: var(--text-100);
+}
+.text-200 {
+  font-size: var(--text-200);
+}
+.text-300, h6, p {
+  font-size: var(--text-300);
+}
+.text-400, h5 {
+  font-size: var(--text-400);
+}
+.text-500, h4 {
+  font-size: var(--text-500);
+}
+.text-600, h3 {
+  font-size: var(--text-600);
+}
+.text-700, h2 {
+  font-size: var(--text-700);
+}
+.text-800, h1 {
+  font-size: var(--text-800);
+}
+
+.bold {
+  font-weight: bold;
+}
+
+/* ========== LAYOUT ========== */
+
+body {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto 1fr;
+}
+
+body > header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+body > nav a {
+  display: block;
+  padding: 1rem;
+}
+
+body > main {
+  padding: 1rem;
+  width: 100%;
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+/* ========== UTILITIES ========== */
+
+.visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.no-decoration {
+  text-decoration: none;
+}
+
+.inline-block {
+  display: inline-block;
+}

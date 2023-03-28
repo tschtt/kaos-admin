@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles.css">
+  <title>{{ title }}</title>
+</head>
+<body>
+  <header>
+      <a href="/">K</a>
+      <button onclick="document.querySelector('#menu').toggleAttribute('hidden')">
+        M
+      </button>
+  </header>
+  <nav id="menu" hidden>
+    <ul>
+      <li><a href="/lista">Lista</a></li>
+      <li><a href="/importar">Importar</a></li>
+      <li><a href="/exportar">Exportar</a></li>
+    </ul>
+  </nav>
+  <main>
+    {{ content | safe }}
+  </main>
+</body>
+</html>
