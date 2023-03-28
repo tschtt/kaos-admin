@@ -5,7 +5,6 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  outline: 1px solid red;
   margin: 0;
   padding: 0;
 }
@@ -28,10 +27,10 @@ img, picture, video, canvas, svg {
   display: block;
 }
 
-label, input, button, textarea, select {
+label, input, textarea, select {
   font: inherit;
   display: block;
-  /* width: 100%; */
+  width: 100%;
 }
 
 p, h1, h2, h3, h4, h5, h6 {
@@ -43,6 +42,11 @@ ul, li {
 }
 
 button {
+  font: inherit;
+  display: block;
+  background-color: transparent;
+  border: none;
+  color: inherit;
   cursor: pointer;
 }
 
@@ -68,10 +72,7 @@ a {
 /* ========== VARIABLES ========== */
 
 :root {
-  --font-main: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;;
-  
-  --color-dark: black;
-  --color-light: white;
+  --font-main: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 
   --text-100: clamp(0.78rem, calc(0.77rem + 0.03vw), 0.80rem);
   --text-200: clamp(0.94rem, calc(0.92rem + 0.11vw), 1.00rem);
@@ -81,6 +82,30 @@ a {
   --text-600: clamp(1.94rem, calc(1.77rem + 0.87vw), 2.44rem);
   --text-700: clamp(2.33rem, calc(2.08rem + 1.25vw), 3.05rem);
   --text-800: clamp(2.80rem, calc(2.45rem + 1.77vw), 3.82rem);
+
+  --color-red-050: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+  --color-red-900: #7f1d1d;
+  --color-red-950: #450a0a;
+  
+  --color-grey-050: #f9fafb;
+  --color-grey-100: #f3f4f6;
+  --color-grey-200: #e5e7eb;
+  --color-grey-300: #d1d5db;
+  --color-grey-400: #9ca3af;
+  --color-grey-500: #6b7280;
+  --color-grey-600: #4b5563;
+  --color-grey-700: #374151;
+  --color-grey-800: #1f2937;
+  --color-grey-900: #111827;
+  --color-grey-950: #030712;
 }
 
 /* ========== BASE ==========  */
@@ -88,8 +113,34 @@ a {
 body {
   font-family: var(--font-main);
   font-size: var(--text-300);
+  color: var(--color-grey-800);
   line-height: 1;
   letter-spacing: .15rem;
+}
+
+a {
+  color: var(--color-red-500);
+}
+
+input, select, textarea {
+  border: 1px solid var(--color-grey-400);
+  padding: .5rem;
+}
+
+label + input {
+  margin-top: .5rem;
+}
+
+button {
+  background-color: var(--color-grey-200);
+  border: 1px solid var(--color-grey-400);
+  padding: .5rem;
+  color: inherit;
+  transition: background-color 200ms ease;
+}
+
+button:hover {
+  background-color: var(--color-grey-300);
 }
 
 /* ========== TEXT ========== */
@@ -131,22 +182,89 @@ body {
   grid-template-rows: auto auto 1fr;
 }
 
-body > header {
+/* ----- header ----- */
+
+#header {
+  background-color: var(--color-grey-900);
+  border-bottom: 8px solid var(--color-red-700);
+  color: var(--color-red-600);
+  font-weight: bold;
   padding: 1rem;
   display: flex;
   justify-content: space-between;
 }
 
-body > nav a {
+#header a, 
+#header button {
   display: block;
-  padding: 1rem;
+  font-size: var(--text-500);
+  text-decoration: none;
+  text-align: center;
+  
+  background-color: transparent;
+  padding: .5rem;
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 100%;
+  transition: 
+    background-color 200ms ease,
+    color 200ms ease;
 }
 
-body > main {
+#header a:hover, 
+#header button:hover {
+  background-color: var(--color-red-950);
+  color: var(--color-red-400);
+}
+
+/* ----- navigation ----- */
+
+#navigation a {
+  display: block;
+  
+  background-color: var(--color-red-400);
+  color: var(--color-red-900);
+  
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 1rem;
+  transition: 
+    background-color 250ms ease,
+    color 250ms ease;
+}
+
+#navigation a:hover {
+  background-color: var(--color-red-600);
+  color: var(--color-red-100);
+}
+
+#navigation li + li {
+  /* border-top: 2px solid var(--color-red-300); */
+}
+
+/* ----- main ----- */
+
+main {
   padding: 1rem;
   width: 100%;
   max-width: 1000px;
   margin-inline: auto;
+}
+
+/* ========== PAGES ========== */
+
+
+
+/* ========== COMPONENTS ========== */
+
+.actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.actions > button + button {
+  border-top: none;
 }
 
 /* ========== UTILITIES ========== */
@@ -171,4 +289,8 @@ body > main {
 
 .inline-block {
   display: inline-block;
+}
+
+.stack > * + * {
+  margin-top: 1rem;
 }

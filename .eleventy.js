@@ -9,13 +9,22 @@ module.exports = function (eleventyConfig) {
             return input
         }
     })
+
+    // add js to template formats
+    eleventyConfig.addTemplateFormats("js");
+    eleventyConfig.addExtension("js", {
+        outputFileExtension: "js",
+        compile: (input) => (data) => {
+            return input
+        }
+    })
     
     return {
         dir: {
-            includes: "_includes",
-            layouts: "_layouts",
             input: 'source',
             output: 'public',
+            includes: "_includes",
+            layouts: "_layouts",
         }
     }
 }

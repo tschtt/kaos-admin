@@ -8,21 +8,19 @@
   <title>{{ title }}</title>
 </head>
 <body>
-  <header>
+  <header id="header">
       <a href="/">K</a>
-      <button onclick="document.querySelector('#menu').toggleAttribute('hidden')">
+      <button class="reset" onclick="document.querySelector('#navigation').toggleAttribute('hidden')">
         M
       </button>
   </header>
-  <nav id="menu" hidden>
+  <nav id="navigation" hidden>
     <ul>
       <li><a href="/lista">Lista</a></li>
       <li><a href="/importar">Importar</a></li>
       <li><a href="/exportar">Exportar</a></li>
     </ul>
   </nav>
-  <main>
-    {{ content | safe }}
-  </main>
+  {{ content | safe }}
 </body>
 </html>

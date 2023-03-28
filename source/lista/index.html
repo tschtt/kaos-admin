@@ -1,8 +1,22 @@
 ---
 layout: "base.njk"
-title: "Kaos | Lista"
+title: "Kaos Panel | Lista"
 ---
 
-<h1 class="text-center">
-  Lista
-</h1>
+<main class="stack">
+    <h1 class="text-center">
+        Lista
+    </h1>
+    <form>
+        <div>
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" class="input" autocomplete="off">
+        </div>
+    </form>
+    <ul class="list results"></ul>
+    <nav class="actions">
+        <button>Mostró comprobante</button>
+        <button>Pagó en puerta (transferencia)</button>
+        <button>Pagó en puerta (efectivo)</button>
+    </nav>
+</main>
