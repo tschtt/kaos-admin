@@ -1,0 +1,25 @@
+---
+layout: "base.njk"
+title: "Kaos Panel | Lista"
+---
+
+<main id="puerta" class="stack">
+    <h1 class="text-center">
+        Puerta
+    </h1>
+    <form>
+        <div>
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" class="input" autocomplete="off">
+        </div>
+    </form>
+    <ul id="results" class="puerta-results">
+        <!-- results -->
+    </ul>
+    <nav class="puerta-actions">
+        <button class="text-left">Mostró comprobante</button>
+        <button class="text-left">Pagó en puerta (transferencia)</button>
+        <button class="text-left">Pagó en puerta (efectivo)</button>
+    </nav>
+</main>
+<script src="index.js"></script>
