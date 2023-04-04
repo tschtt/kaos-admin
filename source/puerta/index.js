@@ -1,7 +1,10 @@
 // library
     
 async function request({ method, url }) {
-  return fetch(`http://localhost:3333${url}`, { method })
+  const headers = {
+    authorization: `bearer ${access_token}`
+  }
+  return fetch(`http://localhost:3333${url}`, { method, headers })
       .then(res => res.json())
 }
 
@@ -17,16 +20,16 @@ let results = []
 // fetch
 
 async function find_results () {
-  return request({ method: 'GET', url: '/puerta' })
+  return request({ method: 'GET', url: '/tickets' })
 }
 
 // creators
 
-function create_results (items) {
-  return items.map(item => `
+function create_results (tickets) {
+  return tickets.map(ticket => `
       <li>
           <button class="text-left">
-              ${item.name}
+              ${ticket.person.name}
           </button>
       </li>
   `).join('')
@@ -61,7 +64,7 @@ function on_click(event) {
 
 async function on_init() {
   results = await find_results()
-  const html = create_results(results)
+  const html = create_results(results.tickets)
   $results.innerHTML = html
 }
 
