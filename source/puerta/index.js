@@ -1,12 +1,4 @@
-// library
-    
-async function request({ method, url }) {
-  const headers = {
-    authorization: `bearer ${access_token}`
-  }
-  return fetch(`http://localhost:3333${url}`, { method, headers })
-      .then(res => res.json())
-}
+import { request } from "/_scripts/request.js"
 
 // elements
 

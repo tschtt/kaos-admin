@@ -1,10 +1,46 @@
 ---
-layout: "base.njk"
+layout: "login.njk"
 title: "Kaos Panel | Login"
 ---
 
 <main>
-  <h1 class="text-center">
-    Login
-  </h1>
+    <h1 class="text-center">
+        Login
+    </h1>
+    <form id="LoginForm">
+        <label for="Username">Usuario</label>
+        <input type="text" id="Username" name="username">
+        <label for="Password">Contraseña</label>
+        <input type="Password" id="password" name="password">
+        <button>
+        Iniciar Sesion
+        </button>
+    </form>
+  <script type="module">
+    import { request, set_session } from '/_scripts/request.js'
+    
+    const $form = document.querySelector('#LoginForm')
+
+    async function on_submit(event) {
+        event.preventDefault()
+        
+        const username = $form.elements.username.value
+        const password = $form.elements.password.value
+        
+        const session = await request({
+            url: '/session',
+            method: 'POST',
+            body: {
+                username,
+                password,
+            }
+        })
+
+        set_session(session)
+
+        window.location.replace('/')
+    }
+    
+    $form.addEventListener('submit', on_submit)
+  </script>
 </main>
