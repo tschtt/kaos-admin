@@ -1,25 +1,23 @@
 ---
 layout: "base.njk"
-title: "Kaos Panel | Lista"
+title: "Kaos Panel | Puerta"
 ---
 
-<main id="puerta" class="stack">
+<main>
     <h1 class="text-center">
         Puerta
     </h1>
-    <form>
-        <div>
-            <label for="nombre">Nombre</label>
-            <input id="nombre" name="nombre" type="text" class="input" autocomplete="off">
-        </div>
-    </form>
-    <ul id="results" class="puerta-results">
-        <!-- results -->
-    </ul>
-    <nav class="puerta-actions">
-        <button class="text-left">Mostró comprobante</button>
-        <button class="text-left">Pagó en puerta (transferencia)</button>
-        <button class="text-left">Pagó en puerta (efectivo)</button>
-    </nav>
 </main>
-<script src="index.js" type="module"></script>
+<script type="module">
+    import { refresh_session } from '/_scripts/request.js'
+
+    async function on_error(error) {
+        alert(error)
+    }
+
+    async function on_init() {
+        await refresh_session()
+    }
+
+    on_init().catch(on_error)
+</script>

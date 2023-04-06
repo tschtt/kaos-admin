@@ -4,7 +4,20 @@ title: "Kaos Panel | Importar"
 ---
 
 <main>
-  <h1 class="text-center">
-    Importar
-  </h1>
+    <h1 class="text-center">
+        Importar
+    </h1>
 </main>
+<script type="module">
+    import { refresh_session } from '/_scripts/request.js'
+
+    async function on_error(error) {
+        alert(error)
+    }
+
+    async function on_init() {
+        await refresh_session()
+    }
+
+    on_init().catch(on_error)
+</script>

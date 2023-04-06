@@ -258,6 +258,10 @@ main {
   margin-inline: auto;
 }
 
+main > * + * {
+  margin-top: 1rem;
+}
+
 /* ========== PAGES ========== */
 
 /* ----- Puerta ----- */

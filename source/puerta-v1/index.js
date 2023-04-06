@@ -1,4 +1,4 @@
-import { request } from "/_scripts/request.js"
+import { refresh_session, request } from "/_scripts/request.js"
 
 // elements
 
@@ -11,13 +11,13 @@ let results = []
 
 // fetch
 
-async function find_results () {
+async function find_tickets () {
   return request({ method: 'GET', url: '/tickets' })
 }
 
 // creators
 
-function create_results (tickets) {
+function create_tickets (tickets) {
   return tickets.map(ticket => `
       <li>
           <button class="text-left">
@@ -35,14 +35,10 @@ function filter_results (name) {
 
 // events
 
-function on_error(error) {
-  alert(error)
-}
-
 function on_input(event) {
   const input = event.target.value
   const rows = filter_results(input)
-  const html = create_results(rows)
+  const html = create_tickets(rows)
   $results.innerHTML = html
 }
 
@@ -54,9 +50,14 @@ function on_click(event) {
   if(event.target.className === 'result') return on_raver_click(event)
 }
 
+function on_error(error) {
+  alert(error)
+}
+
 async function on_init() {
-  results = await find_results()
-  const html = create_results(results.tickets)
+  await refresh_session()
+  const tickets = await find_tickets()
+  const html = create_tickets(tickets)
   $results.innerHTML = html
 }
 

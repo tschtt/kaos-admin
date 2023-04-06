@@ -7,4 +7,24 @@ title: "Kaos Panel"
     <h1 class="text-center">
         Kaos Rave
     </h1>
+    <p id="welcome" class="text-center">
+        Hola!
+    </p>
 </main>
+<script type="module">
+    import { refresh_session } from '/_scripts/request.js'
+
+    const $welcome = document.querySelector('#welcome')
+    
+    async function on_error(error) {
+        alert(error)
+    }
+
+    async function on_init() {
+        const session = await refresh_session()
+        const user = session.user
+        $welcome.innerHTML = `Hola, ${user.username}!`
+    }
+
+    on_init().catch(on_error)
+</script>

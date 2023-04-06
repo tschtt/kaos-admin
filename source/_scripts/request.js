@@ -1,6 +1,6 @@
 
 const BASE = 'http://localhost:3333'
-const PAGE_LOGIN = '/session/login'
+const PAGE_LOGIN = '/sesion/iniciar'
 
 let access_token
 let refresh_token = window.localStorage.getItem('refresh_token')
@@ -9,7 +9,7 @@ export function set_session(session) {
     access_token = session.access_token
     refresh_token = session.refresh_token
     window.localStorage.setItem('refresh_token', session.refresh_token)
-    window.localStorage.setItem('user', session.user)    
+    window.localStorage.setItem('user', session.user)
 }
 
 export async function refresh_session() {
@@ -32,6 +32,7 @@ export async function refresh_session() {
     }
 
     set_session(session)
+    return session
 }
 
 export async function request ({ url, method, body }) {
@@ -52,7 +53,7 @@ export async function request ({ url, method, body }) {
     }
     
     // fetch call
-    
+
     let response = await fetch(`${BASE}${url}`, options)
     let data = await response.json()
 
