@@ -258,7 +258,8 @@ main {
   margin-inline: auto;
 }
 
-main > * + * {
+main > * + *,
+form > * + * {
   margin-top: 1rem;
 }
 
