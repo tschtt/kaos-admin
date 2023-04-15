@@ -1,5 +1,5 @@
 
-const BASE = 'http://api.kaosrave.com'
+const BASE = 'http://localhost:3333'
 const PAGE_LOGIN = '/sesion/iniciar'
 
 let access_token
@@ -46,8 +46,11 @@ export async function request ({ url, method, body }) {
     if(access_token) {
         options.headers['Authorization'] = `bearer ${access_token}`
     }
-    
-    if(body) {
+
+    if(body && body instanceof FormData) {
+        options.body = body
+    }
+    else if(body) {
         options.headers['Content-Type'] = 'application/json'
         options.body = JSON.stringify(body)
     }
