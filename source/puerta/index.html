@@ -10,14 +10,14 @@ title: "Kaos Produccion | Puerta"
     <!-- Search -->
     <form>
         <label for="name">Nombre</label>
-        <input id="input" name="name" type="text" class="input" autocomplete="off">
+        <input id="search" name="name" type="text" class="input" autocomplete="off">
     </form>
     <!-- Tickets pendientes -->
     <h2 class="text-300">Pendientes</h2>
-    <ul id="tickets-pending"></ul>
+    <ul id="ticket-pending-list"></ul>
     <!-- Tickets usados -->
     <h2 class="text-300">Adentro</h2>
-    <ul id="tickets-used"></ul>
+    <ul id="ticket-used-list"></ul>
     <!-- Acciones -->
     <h2 class="text-300">Acciones</h2>
     <nav class="puerta-actions">
@@ -25,7 +25,7 @@ title: "Kaos Produccion | Puerta"
         <button class="text-left">Pagó en puerta (transferencia)</button>
         <button class="text-left">Pagó en puerta (efectivo)</button>
     </nav>
-    <dialog id="dialog-enter">
+    <dialog id="ticket-pending-dialog">
         <h2 class="dialog-title text-500 text-center capitalize">
             Marcar ingreso
         </h2>
@@ -33,15 +33,15 @@ title: "Kaos Produccion | Puerta"
             Se marcará el ingreso de la persona al evento
         </p>
         <div class="dialog-actions">
-            <button id="dialog-enter-submit" class="dialog-button" type="submit" autofocus>
+            <button id="ticket-pending-dialog-submit" class="dialog-button" type="submit" autofocus>
                 ACEPTAR
             </button>
-            <button id="dialog-enter-cancel" class="dialog-button" type="submit" value="cancel" autofocus>
+            <button id="ticket-pending-dialog-cancel" class="dialog-button" type="submit" value="cancel" autofocus>
                 CANCELAR
             </button>
         </div>
     </dialog>
-    <dialog id="dialog-revert">
+    <dialog id="ticket-used-dialog">
         <h2 class="dialog-title text-500 text-center capitalize">
             Revertir ingreso
         </h2>
@@ -49,10 +49,10 @@ title: "Kaos Produccion | Puerta"
             Se volverá a marcar a la persona como pendiente.
         </p>
         <div class="dialog-actions">
-            <button id="dialog-revert-submit" class="dialog-button" type="submit" autofocus>
+            <button id="ticket-used-dialog-submit" class="dialog-button" type="submit" autofocus>
                 ACEPTAR
             </button>
-            <button id="dialog-revert-cancel" class="dialog-button" type="submit" value="cancel" autofocus>
+            <button id="ticket-used-dialog-cancel" class="dialog-button" type="submit" value="cancel" autofocus>
                 CANCELAR
             </button>
         </div>
@@ -61,8 +61,20 @@ title: "Kaos Produccion | Puerta"
 <script type="module">
     import { request, refresh_session } from '/_scripts/request.js'
 
+    // helpers
+
+    function wrapper(listener) {
+        return async function (event) {
+            try {
+                await listener(event)
+            } catch (error) {
+                on_error(error)
+            }
+        }
+    }
+    
     function on_error(error) {
-        alert(error)
+        console.log(error)
     }
     
     // constants
@@ -75,17 +87,17 @@ title: "Kaos Produccion | Puerta"
     
     // elements
     
-    const $input = document.querySelector('#input')
-    const $tickets_pending = document.querySelector('#tickets-pending')
-    const $tickets_used = document.querySelector('#tickets-used')
+    const $search = document.querySelector('#search')
     
-    const $dialog_enter = document.querySelector('#dialog-enter')
-    const $dialog_enter_submit = document.querySelector('#dialog-enter-submit')
-    const $dialog_enter_cancel = document.querySelector('#dialog-enter-cancel')
+    const $ticket_pending_list = document.querySelector('#ticket-pending-list')
+    const $ticket_pending_dialog = document.querySelector('#ticket-pending-dialog')
+    const $ticket_pending_dialog_submit = document.querySelector('#ticket-pending-dialog-submit')
+    const $ticket_pending_dialog_cancel = document.querySelector('#ticket-pending-dialog-cancel')
     
-    const $dialog_revert = document.querySelector('#dialog-revert')
-    const $dialog_revert_submit = document.querySelector('#dialog-revert-submit')
-    const $dialog_revert_cancel = document.querySelector('#dialog-revert-cancel')
+    const $ticket_used_list = document.querySelector('#ticket-used-list')
+    const $ticket_used_dialog = document.querySelector('#ticket-used-dialog')
+    const $ticket_used_dialog_submit = document.querySelector('#ticket-used-dialog-submit')
+    const $ticket_used_dialog_cancel = document.querySelector('#ticket-used-dialog-cancel')
     
     // state
 
@@ -93,7 +105,7 @@ title: "Kaos Produccion | Puerta"
     let batches = []
     let selected
     
-    // getters / setters
+    // getters
 
     function get_tickets() {
         return tickets
@@ -108,8 +120,10 @@ title: "Kaos Produccion | Puerta"
     }
 
     function get_search() {
-        return $input.value
+        return $search.value
     }
+
+    // setters
 
     function set_tickets(value) {
         tickets = value
@@ -122,8 +136,8 @@ title: "Kaos Produccion | Puerta"
     }
 
     function set_search(value) {
-        $input.value = value
-        return $input.value
+        $search.value = value
+        return $search.value
     }
 
     function set_selected(value) {
@@ -161,7 +175,7 @@ title: "Kaos Produccion | Puerta"
         const tickets_pending = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.ACTIVE)
         const tickets_used = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.USED)
         
-        $tickets_pending.innerHTML = tickets_pending.map(ticket => {
+        $ticket_pending_list.innerHTML = tickets_pending.map(ticket => {
             return `
             <li>
                 <button class="ticket ticket-pending text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
@@ -171,7 +185,7 @@ title: "Kaos Produccion | Puerta"
             `
         }).join('')
     
-        $tickets_used.innerHTML = tickets_used.map(ticket => {
+        $ticket_used_list.innerHTML = tickets_used.map(ticket => {
             return `
             <li>
                 <button class="ticket ticket-used text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
@@ -185,26 +199,25 @@ title: "Kaos Produccion | Puerta"
     
     // events
     
-
-    function on_input(event) {
+    function on_search(event) {
         let tickets, search
         search = get_search()
         tickets = get_tickets()
         tickets = filter_tickets(tickets, search)
         render_tickets(tickets)
     }
-    
+
 
     function on_ticket_pending_click(event) {
         const selected = tickets.find(ticket => ticket.id == event.target.dataset.ticket)
         const batch = batches.find(batch => batch.id == selected.fk_batch)
         set_selected(selected)
-        $dialog_enter.querySelector('.dialog-title').innerHTML = selected.person.name
-        $dialog_enter.querySelector('.dialog-button').setAttribute('value', selected.id)
-        $dialog_enter.showModal()
+        $ticket_pending_dialog.querySelector('.dialog-title').innerHTML = selected.person.name
+        $ticket_pending_dialog.querySelector('.dialog-button').setAttribute('value', selected.id)
+        $ticket_pending_dialog.showModal()
     }
 
-    async function on_dialog_enter_submit(event) {
+    async function on_ticket_pending_dialog_submit(event) {
         let selected, tickets, search
         selected = get_selected()
         search = get_search()
@@ -212,11 +225,11 @@ title: "Kaos Produccion | Puerta"
         tickets = set_tickets(await request_tickets())
         tickets = filter_tickets(tickets, search)
         render_tickets(tickets)
-        $dialog_enter.close()
+        $ticket_pending_dialog.close()
     }
 
-    async function on_dialog_enter_cancel(event) {
-        $dialog_enter.close()
+    async function on_ticket_pending_dialog_cancel(event) {
+        $ticket_pending_dialog.close()
     }
     
 
@@ -224,12 +237,12 @@ title: "Kaos Produccion | Puerta"
         const selected = tickets.find(ticket => ticket.id == event.target.dataset.ticket)
         const batch = batches.find(batch => batch.id == selected.fk_batch)
         set_selected(selected)
-        $dialog_revert.querySelector('.dialog-title').innerHTML = selected.person.name
-        $dialog_revert.querySelector('.dialog-button').setAttribute('value', selected.id)
-        $dialog_revert.showModal()
+        $ticket_used_dialog.querySelector('.dialog-title').innerHTML = selected.person.name
+        $ticket_used_dialog.querySelector('.dialog-button').setAttribute('value', selected.id)
+        $ticket_used_dialog.showModal()
     }
 
-    async function on_dialog_revert_submit(event) {
+    async function on_ticket_used_dialog_submit(event) {
         let selected, tickets, search
         selected = get_selected()
         search = get_search()
@@ -237,11 +250,11 @@ title: "Kaos Produccion | Puerta"
         tickets = set_tickets(await request_tickets())
         tickets = filter_tickets(tickets, search)
         render_tickets(tickets)
-        $dialog_revert.close()
+        $ticket_used_dialog.close()
     }      
     
-    async function on_dialog_revert_cancel(event) {
-        $dialog_revert.close()
+    async function on_dialog_used_dialog_cancel(event) {
+        $ticket_used_dialog.close()
     }
     
 
@@ -257,16 +270,15 @@ title: "Kaos Produccion | Puerta"
 
     // init
 
-    $input.addEventListener('input', on_input)
+    $search.addEventListener('input', on_search)
 
-    $tickets_pending.addEventListener('click', on_ticket_pending_click)
-    $dialog_enter_submit.addEventListener('click', on_dialog_enter_submit)  
-    $dialog_enter_cancel.addEventListener('click', on_dialog_enter_cancel)  
+    $ticket_pending_list.addEventListener('click', wrapper(on_ticket_pending_click))
+    $ticket_pending_dialog_submit.addEventListener('click', wrapper(on_ticket_pending_dialog_submit))  
+    $ticket_pending_dialog_cancel.addEventListener('click', wrapper(on_ticket_pending_dialog_cancel))  
     
-    $tickets_used.addEventListener('click', on_ticket_used_click)
-    $dialog_revert_submit.addEventListener('click', on_dialog_revert_submit)
-    $dialog_revert_cancel.addEventListener('click', on_dialog_revert_cancel)
-    
+    $ticket_used_list.addEventListener('click', wrapper(on_ticket_used_click))
+    $ticket_used_dialog_submit.addEventListener('click', wrapper(on_ticket_used_dialog_submit))
+    $ticket_used_dialog_cancel.addEventListener('click', wrapper(on_dialog_used_dialog_cancel))
     
     on_init().catch(on_error)
 
@@ -279,7 +291,5 @@ title: "Kaos Produccion | Puerta"
     }
     dialog > * + * {
         margin-top: 1rem;
-    }
-    dialog > p {
     }
 </style>
