@@ -1,23 +1,285 @@
 ---
 layout: "base.njk"
-title: "Kaos Panel | Puerta"
+title: "Kaos Produccion | Puerta"
 ---
 
 <main>
     <h1 class="text-center">
         Puerta
     </h1>
+    <!-- Search -->
+    <form>
+        <label for="name">Nombre</label>
+        <input id="input" name="name" type="text" class="input" autocomplete="off">
+    </form>
+    <!-- Tickets pendientes -->
+    <h2 class="text-300">Pendientes</h2>
+    <ul id="tickets-pending"></ul>
+    <!-- Tickets usados -->
+    <h2 class="text-300">Adentro</h2>
+    <ul id="tickets-used"></ul>
+    <!-- Acciones -->
+    <h2 class="text-300">Acciones</h2>
+    <nav class="puerta-actions">
+        <button class="text-left">Mostró comprobante</button>
+        <button class="text-left">Pagó en puerta (transferencia)</button>
+        <button class="text-left">Pagó en puerta (efectivo)</button>
+    </nav>
+    <dialog id="dialog-enter">
+        <h2 class="dialog-title text-500 text-center capitalize">
+            Marcar ingreso
+        </h2>
+        <p class="text-center">
+            Se marcará el ingreso de la persona al evento
+        </p>
+        <div class="dialog-actions">
+            <button id="dialog-enter-submit" class="dialog-button" type="submit" autofocus>
+                ACEPTAR
+            </button>
+            <button id="dialog-enter-cancel" class="dialog-button" type="submit" value="cancel" autofocus>
+                CANCELAR
+            </button>
+        </div>
+    </dialog>
+    <dialog id="dialog-revert">
+        <h2 class="dialog-title text-500 text-center capitalize">
+            Revertir ingreso
+        </h2>
+        <p class="text-center">
+            Se volverá a marcar a la persona como pendiente.
+        </p>
+        <div class="dialog-actions">
+            <button id="dialog-revert-submit" class="dialog-button" type="submit" autofocus>
+                ACEPTAR
+            </button>
+            <button id="dialog-revert-cancel" class="dialog-button" type="submit" value="cancel" autofocus>
+                CANCELAR
+            </button>
+        </div>
+    </dialog>
 </main>
 <script type="module">
-    import { refresh_session } from '/_scripts/request.js'
+    import { request, refresh_session } from '/_scripts/request.js'
 
-    async function on_error(error) {
+    function on_error(error) {
         alert(error)
     }
+    
+    // constants
+    
+    const STATUSES = {
+        ACTIVE: 1,
+        BLOCKED: 2,
+        USED: 3,
+    }
+    
+    // elements
+    
+    const $input = document.querySelector('#input')
+    const $tickets_pending = document.querySelector('#tickets-pending')
+    const $tickets_used = document.querySelector('#tickets-used')
+    
+    const $dialog_enter = document.querySelector('#dialog-enter')
+    const $dialog_enter_submit = document.querySelector('#dialog-enter-submit')
+    const $dialog_enter_cancel = document.querySelector('#dialog-enter-cancel')
+    
+    const $dialog_revert = document.querySelector('#dialog-revert')
+    const $dialog_revert_submit = document.querySelector('#dialog-revert-submit')
+    const $dialog_revert_cancel = document.querySelector('#dialog-revert-cancel')
+    
+    // state
 
-    async function on_init() {
-        await refresh_session()
+    let tickets = []
+    let batches = []
+    let selected
+    
+    // getters / setters
+
+    function get_tickets() {
+        return tickets
     }
 
+    function get_batches() {
+        return batches
+    }
+
+    function get_selected() {
+        return selected
+    }
+
+    function get_search() {
+        return $input.value
+    }
+
+    function set_tickets(value) {
+        tickets = value
+        return tickets
+    }
+
+    function set_batches(value) {
+        batches = value
+        return batches
+    }
+
+    function set_search(value) {
+        $input.value = value
+        return $input.value
+    }
+
+    function set_selected(value) {
+        selected = value
+        return selected
+    }
+    
+    // requests
+    
+    async function request_batches() {
+        return request({ url: '/batches', method: 'GET' })
+    }
+    
+    async function request_tickets() {
+        return request({ url: '/tickets', method: 'GET' })
+    }
+
+    async function request_ticket_update(id, data) {
+        return request({ url: `/tickets/${id}`, method: 'PATCH', body: data })
+    }
+    
+    async function request_ticket_creation(data) {
+        return request({ url: '/tickets', method: 'POST', body: data })
+    }
+    
+    // filters 
+
+    function filter_tickets(tickets = [], value) {
+        return tickets.filter(ticket => ticket.person.name.toLowerCase().includes(value.toLowerCase()))
+    }
+    
+    // renders
+    
+    function render_tickets(tickets = []) {
+        const tickets_pending = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.ACTIVE)
+        const tickets_used = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.USED)
+        
+        $tickets_pending.innerHTML = tickets_pending.map(ticket => {
+            return `
+            <li>
+                <button class="ticket ticket-pending text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
+                    ${ ticket.person.name.toLowerCase() }
+                </button>
+            </li>
+            `
+        }).join('')
+    
+        $tickets_used.innerHTML = tickets_used.map(ticket => {
+            return `
+            <li>
+                <button class="ticket ticket-used text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
+                    ${ ticket.person.name.toLowerCase() }
+                </button>
+            </li>
+            `
+        }).join('')
+    
+    }
+    
+    // events
+    
+
+    function on_input(event) {
+        let tickets, search
+        search = get_search()
+        tickets = get_tickets()
+        tickets = filter_tickets(tickets, search)
+        render_tickets(tickets)
+    }
+    
+
+    function on_ticket_pending_click(event) {
+        const selected = tickets.find(ticket => ticket.id == event.target.dataset.ticket)
+        const batch = batches.find(batch => batch.id == selected.fk_batch)
+        set_selected(selected)
+        $dialog_enter.querySelector('.dialog-title').innerHTML = selected.person.name
+        $dialog_enter.querySelector('.dialog-button').setAttribute('value', selected.id)
+        $dialog_enter.showModal()
+    }
+
+    async function on_dialog_enter_submit(event) {
+        let selected, tickets, search
+        selected = get_selected()
+        search = get_search()
+        await request_ticket_update(selected.id, { fk_ticket_status: STATUSES.USED })
+        tickets = set_tickets(await request_tickets())
+        tickets = filter_tickets(tickets, search)
+        render_tickets(tickets)
+        $dialog_enter.close()
+    }
+
+    async function on_dialog_enter_cancel(event) {
+        $dialog_enter.close()
+    }
+    
+
+    function on_ticket_used_click(event) {
+        const selected = tickets.find(ticket => ticket.id == event.target.dataset.ticket)
+        const batch = batches.find(batch => batch.id == selected.fk_batch)
+        set_selected(selected)
+        $dialog_revert.querySelector('.dialog-title').innerHTML = selected.person.name
+        $dialog_revert.querySelector('.dialog-button').setAttribute('value', selected.id)
+        $dialog_revert.showModal()
+    }
+
+    async function on_dialog_revert_submit(event) {
+        let selected, tickets, search
+        selected = get_selected()
+        search = get_search()
+        await request_ticket_update(selected.id, { fk_ticket_status: STATUSES.ACTIVE })
+        tickets = set_tickets(await request_tickets())
+        tickets = filter_tickets(tickets, search)
+        render_tickets(tickets)
+        $dialog_revert.close()
+    }      
+    
+    async function on_dialog_revert_cancel(event) {
+        $dialog_revert.close()
+    }
+    
+
+    async function on_init() {
+        let tickets, batches, search
+        await refresh_session()
+        search = get_search()
+        batches = set_batches(await request_batches())
+        tickets = set_tickets(await request_tickets())
+        tickets = filter_tickets(tickets, search)
+        render_tickets(tickets)
+    }
+
+    // init
+
+    $input.addEventListener('input', on_input)
+
+    $tickets_pending.addEventListener('click', on_ticket_pending_click)
+    $dialog_enter_submit.addEventListener('click', on_dialog_enter_submit)  
+    $dialog_enter_cancel.addEventListener('click', on_dialog_enter_cancel)  
+    
+    $tickets_used.addEventListener('click', on_ticket_used_click)
+    $dialog_revert_submit.addEventListener('click', on_dialog_revert_submit)
+    $dialog_revert_cancel.addEventListener('click', on_dialog_revert_cancel)
+    
+    
     on_init().catch(on_error)
+
 </script>
+<style>
+    dialog {
+        /* border: none; */
+        box-shadow: 1px 1px 10px black;
+        padding: 1rem;
+    }
+    dialog > * + * {
+        margin-top: 1rem;
+    }
+    dialog > p {
+    }
+</style>
