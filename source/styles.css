@@ -54,6 +54,7 @@ a {
   color: inherit;
 }
 
+
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
    scroll-behavior: auto;
@@ -147,12 +148,15 @@ button:hover {
 /* ========== TEXT ========== */
 
 .text-100 {
+  font-weight: normal;
   font-size: var(--text-100);
 }
 .text-200 {
+  font-weight: normal;
   font-size: var(--text-200);
 }
 .text-300, h6, p {
+  font-weight: normal;
   font-size: var(--text-300);
 }
 .text-400, h5 {
@@ -263,6 +267,10 @@ form > * + * {
   margin-top: 1rem;
 }
 
+dialog {
+  margin: auto;
+}
+
 /* ========== PAGES ========== */
 
 /* ----- Puerta ----- */
@@ -308,6 +316,10 @@ form > * + * {
 
 .inline-block {
   display: inline-block;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
 
 .stack > * + * {
