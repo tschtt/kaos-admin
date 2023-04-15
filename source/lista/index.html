@@ -1,0 +1,48 @@
+---
+layout: "base.njk"
+title: "Kaos Produccion | Lista"
+---
+
+<main>
+    <h1 class="text-center">
+        Lista
+    </h1>
+    <form id="form">
+        <label for="file">Archivo</label>
+        <input type="file" name="file" id="file" required>
+        <button>
+            Cargar
+        </button>
+    </form>
+</main>
+<script type="module">
+    import { request, refresh_session } from '/_scripts/request.js'
+
+    const $form = document.querySelector('#form')
+    
+    async function on_error(error) {
+        alert(error)
+    }
+
+    async function on_submit(event) {
+        event.preventDefault()
+
+        const body = new FormData(event.target)
+        
+        const response = await request({
+            url: '/tickets/import',
+            method: 'POST',
+            body,
+        })
+
+        alert(response.message)
+    }
+
+    async function on_init() {
+        await refresh_session()
+    }
+
+    $form.addEventListener('submit', (event) => on_submit(event).catch(on_error))
+    
+    on_init().catch(on_error)
+</script>
