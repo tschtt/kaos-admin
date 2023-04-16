@@ -132,7 +132,7 @@ label + input {
   margin-top: .5rem;
 }
 
-button {
+button, .button {
   background-color: var(--color-grey-200);
   border: 1px solid var(--color-grey-400);
   width: 100%;

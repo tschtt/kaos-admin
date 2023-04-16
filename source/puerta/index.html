@@ -175,25 +175,37 @@ title: "Kaos Produccion | Puerta"
         const tickets_pending = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.ACTIVE)
         const tickets_used = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.USED)
         
-        $ticket_pending_list.innerHTML = tickets_pending.map(ticket => {
-            return `
-            <li>
-                <button class="ticket ticket-pending text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
-                    ${ ticket.person.name.toLowerCase() }
-                </button>
-            </li>
+        if(!tickets_pending.length) {
+            $ticket_pending_list.innerHTML = `
+                <li class="button text-center">Sin resultados</li>
             `
-        }).join('')
-    
-        $ticket_used_list.innerHTML = tickets_used.map(ticket => {
-            return `
-            <li>
-                <button class="ticket ticket-used text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
-                    ${ ticket.person.name.toLowerCase() }
-                </button>
-            </li>
+        } else {
+            $ticket_pending_list.innerHTML = tickets_pending.map(ticket => {
+                return `
+                <li>
+                    <button class="ticket ticket-pending text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
+                        ${ ticket.person.name.toLowerCase() }
+                    </button>
+                </li>
+                `
+            }).join('')
+        }
+        
+        if(!tickets_used.length) {
+            $ticket_used_list.innerHTML = `
+                <li class="button text-center">Sin resultados</li>
             `
-        }).join('')
+        } else {
+            $ticket_used_list.innerHTML = tickets_used.map(ticket => {
+                return `
+                <li>
+                    <button class="ticket ticket-used text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
+                        ${ ticket.person.name.toLowerCase() }
+                    </button>
+                </li>
+                `
+            }).join('')
+        }
     
     }
     
@@ -209,6 +221,7 @@ title: "Kaos Produccion | Puerta"
 
 
     function on_ticket_pending_click(event) {
+        if(!event.target.className.includes('ticket-pending')) return
         const selected = tickets.find(ticket => ticket.id == event.target.dataset.ticket)
         const batch = batches.find(batch => batch.id == selected.fk_batch)
         set_selected(selected)
@@ -234,6 +247,7 @@ title: "Kaos Produccion | Puerta"
     
 
     function on_ticket_used_click(event) {
+        if(!event.target.className.includes('ticket-used')) return
         const selected = tickets.find(ticket => ticket.id == event.target.dataset.ticket)
         const batch = batches.find(batch => batch.id == selected.fk_batch)
         set_selected(selected)
