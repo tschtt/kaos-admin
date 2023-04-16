@@ -99,7 +99,7 @@ title: "Kaos Produccion | Puerta"
             } catch (error) {
                 switch (error.name) {
                     case 'UnauthorizedError':
-                        return location.assign(PAGE_LOGIN)
+                        return location.assign('/sesion/iniciar')
                         break;
                     default:
                         console.log(error)

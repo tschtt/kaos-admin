@@ -1,6 +1,5 @@
 
 const BASE = 'http://api.kaosrave.com'
-const PAGE_LOGIN = '/sesion/iniciar'
 
 let access_token
 let refresh_token = window.localStorage.getItem('refresh_token')
@@ -24,7 +23,7 @@ export function set_session(session) {
 
 export async function refresh_session() {
     if(!refresh_token) {
-        return location.assign(PAGE_LOGIN)
+        throw new UnauthorizedError()
     }
     
     const options = {
