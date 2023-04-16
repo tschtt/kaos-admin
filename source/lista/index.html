@@ -23,7 +23,14 @@ title: "Kaos Produccion | Lista"
     const $form = document.querySelector('#form')
     
     async function on_error(error) {
-        alert(error)
+        switch (error.name) {
+            case 'UnauthorizedError':
+                return location.assign(PAGE_LOGIN)
+                break;
+            default:
+                console.log(error)
+                break;
+        }
     }
 
     async function on_submit(event) {
