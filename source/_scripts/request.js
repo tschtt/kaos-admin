@@ -5,6 +5,16 @@ const PAGE_LOGIN = '/sesion/iniciar'
 let access_token
 let refresh_token = window.localStorage.getItem('refresh_token')
 
+class UnauthorizedError extends Error {
+  constructor() {
+    super('No tenes permiso para acceder a este recurso')
+    this.name = 'UnauthorizedError'
+    if(Error.captureStackTrace) {
+      Error.captureStackTrace(this, UnauthorizedError)
+    }
+  }
+}
+
 export function set_session(session) {
     access_token = session.access_token
     refresh_token = session.refresh_token
@@ -28,7 +38,7 @@ export async function refresh_session() {
     const session = await response.json()
 
     if(!response.ok) {
-        return location.assign(PAGE_LOGIN)
+        throw new UnauthorizedError()
     }
 
     set_session(session)
@@ -77,7 +87,7 @@ export async function request ({ url, method, body }) {
         
         // retry
         if(!refresh_response.ok) {
-            return location.assign(PAGE_LOGIN)
+            throw new UnauthorizedError()
         }
         
         set_session(session)
