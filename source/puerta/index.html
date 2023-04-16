@@ -277,6 +277,10 @@ title: "Kaos Produccion | Puerta"
         set_selected(selected)
     }
 
+    function on_ticket_pending_dialog_cancel(event) {
+        $ticket_pending_dialog.close()
+    }
+    
     async function on_ticket_pending_dialog_submit(event) {
         let selected, tickets, search
         selected = get_selected()
@@ -288,10 +292,6 @@ title: "Kaos Produccion | Puerta"
         $ticket_pending_dialog.close()
     }
 
-    function on_ticket_pending_dialog_cancel(event) {
-        $ticket_pending_dialog.close()
-    }
-    
 
     function on_ticket_used_click(event) {
         const $ticket = event.target.closest('button')
@@ -340,6 +340,10 @@ title: "Kaos Produccion | Puerta"
         $ticket_actions_dialog.showModal()
     }
 
+    function on_ticket_actions_dialog_cancel(event) {
+        $ticket_actions_dialog.close()
+    }
+
     async function on_ticket_actions_form_submit(event) {
         event.preventDefault()
         
@@ -363,9 +367,6 @@ title: "Kaos Produccion | Puerta"
         $ticket_actions_dialog.close()
     }
     
-    function on_ticket_actions_dialog_cancel(event) {
-        $ticket_actions_dialog.close()
-    }
 
     async function on_init() {
         let tickets, batches, search
