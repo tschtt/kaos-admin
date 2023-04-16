@@ -1,5 +1,5 @@
 
-const BASE = 'http://api.kaosrave.com'
+const BASE = 'http://localhost:3333'
 const PAGE_LOGIN = '/sesion/iniciar'
 
 let access_token

@@ -5,11 +5,8 @@ title: "Kaos Producción"
 
 <main>
     <h1 class="text-center">
-        Kaos Produccion
+        Kaos<br/>Produccion
     </h1>
-    <p id="welcome" class="text-center">
-        Hola!
-    </p>
 </main>
 <script type="module">
     import { refresh_session } from '/_scripts/request.js'
@@ -17,13 +14,18 @@ title: "Kaos Producción"
     const $welcome = document.querySelector('#welcome')
     
     async function on_error(error) {
-        alert(error)
+        switch (error.name) {
+            case 'UnauthorizedError':
+                return location.assign(PAGE_LOGIN)
+                break;
+            default:
+                console.log(error)
+                break;
+        }
     }
 
     async function on_init() {
-        const session = await refresh_session()
-        const user = session.user
-        $welcome.innerHTML = `Hola, ${user.username}!`
+        await refresh_session()
     }
 
     on_init().catch(on_error)

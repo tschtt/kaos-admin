@@ -10,10 +10,12 @@ title: "Kaos Produccion | Lista"
     <form id="form">
         <label for="file">Archivo</label>
         <input type="file" name="file" id="file" required>
-        <button>
+    </form>
+    <div class="actions">
+        <button type="submit" form="form">
             Cargar
         </button>
-    </form>
+    </div>
 </main>
 <script type="module">
     import { request, refresh_session } from '/_scripts/request.js'

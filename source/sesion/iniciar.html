@@ -12,10 +12,12 @@ title: "Kaos Producción | Login"
         <input type="text" id="Username" name="username">
         <label for="Password">Contraseña</label>
         <input type="Password" id="password" name="password">
-        <button>
+    </form>
+    <div class="actions">
+        <button type="submit" form="LoginForm" class="full-width">
             Iniciar Sesion
         </button>
-    </form>
+    </div>
   <script type="module">
     import { request, set_session } from '/_scripts/request.js'
     

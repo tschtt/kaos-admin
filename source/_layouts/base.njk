@@ -8,16 +8,17 @@
         <title>{{ title }}</title>
     </head>
     <body>
-        <header id="header">
-            <a href="/">K</a>
-            <button class="reset" onclick="document.querySelector('#navigation').toggleAttribute('hidden')">
+        <header id="header" class="flex">
+            <a class="button" href="/">K</a>
+            <p>KAOS RAVE</p>
+            <button onclick="document.querySelector('#navigation').toggleAttribute('hidden')">
                 M
             </button>
         </header>
         <nav id="navigation" hidden>
-            <ul>
-            <li><a href="/lista">Lista</a></li>
-            <li><a href="/puerta">Puerta</a></li>
+            <ul class="stack-100">
+                <li><a href="/lista">Lista</a></li>
+                <li><a href="/puerta">Puerta</a></li>
             </ul>
         </nav>
         {{ content | safe }}

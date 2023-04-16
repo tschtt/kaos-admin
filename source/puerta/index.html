@@ -10,23 +10,23 @@ title: "Kaos Produccion | Puerta"
     <!-- Search -->
     <form>
         <label for="name">Nombre</label>
-        <input id="search" name="name" type="text" class="input" autocomplete="off">
+        <input id="search" name="name" type="text" class="full-width" autocomplete="off">
     </form>
     <div id="ticket-pending-list" class="stack stack-100">
         <h2 class="text-300">Pendientes</h2>
-        <ul></ul>
+        <ul class="action-list"></ul>
     </div>
     <div id="ticket-used-list" class="stack stack-100">
         <h2 class="text-300">Adentro</h2>
-        <ul></ul>
+        <ul class="action-list"></ul>
     </div>
     <div id="ticket-actions" class="stack stack-100">
         <h2 class="text-300">Acciones</h2>
-        <nav class="puerta-actions">
-            <button data-batch="comprobante" class="text-left">Mostró comprobante</button>
-            <button data-batch="transferencia" class="text-left">Pagó en puerta (transferencia)</button>
-            <button data-batch="efectivo" class="text-left">Pagó en puerta (efectivo)</button>
-        </nav>
+        <ul class="action-list">
+            <li><button data-batch="comprobante" class="text-left">Mostró comprobante</button></li>
+            <li><button data-batch="transferencia" class="text-left">Pagó en puerta (transferencia)</button></li>
+            <li><button data-batch="efectivo" class="text-left">Pagó en puerta (efectivo)</button></li>
+        </ul>
     </div>
     <dialog id="ticket-pending-dialog">
         <h2 class="dialog-title text-500 text-center capitalize">
@@ -35,7 +35,7 @@ title: "Kaos Produccion | Puerta"
         <p class="text-center">
             Se marcará el ingreso de la persona al evento
         </p>
-        <div class="dialog-actions">
+        <div class="dialog-actions actions">
             <button id="ticket-pending-dialog-submit" class="dialog-button" type="submit" autofocus>
                 ACEPTAR
             </button>
@@ -51,7 +51,7 @@ title: "Kaos Produccion | Puerta"
         <p class="text-center">
             Se volverá a marcar a la persona como pendiente.
         </p>
-        <div class="dialog-actions">
+        <div class="dialog-actions actions">
             <button id="ticket-used-dialog-submit" class="dialog-button" type="submit" autofocus>
                 ACEPTAR
             </button>
@@ -74,8 +74,10 @@ title: "Kaos Produccion | Puerta"
             <input type="text" name="batch" id="batch" disabled>
             <label for="value">Valor</label>
             <input type="text" name="value" id="value" disabled>
+            <label for="notes">Notas</label>
+            <textarea name="notes" id="notes" rows="5"></textarea>
         </form>
-        <div class="dialog-actions">
+        <div class="actions">
             <button class="dialog-button" form="ticket-actions-form" type="submit">
                 ACEPTAR
             </button>
@@ -95,13 +97,16 @@ title: "Kaos Produccion | Puerta"
             try {
                 await listener(event)
             } catch (error) {
-                on_error(error)
+                switch (error.name) {
+                    case 'UnauthorizedError':
+                        return location.assign(PAGE_LOGIN)
+                        break;
+                    default:
+                        console.log(error)
+                        break;
+                }
             }
         }
-    }
-    
-    function on_error(error) {
-        console.log(error)
     }
     
     // constants
@@ -354,6 +359,7 @@ title: "Kaos Produccion | Puerta"
         const response = await request_ticket_creation({
             fk_batch: selected.batch.id,
             fk_ticket_status: STATUSES.USED,
+            notes: $ticket_actions_form.elements.notes.value,
             person: {
                 name: $ticket_actions_form.elements.name.value
             }
@@ -394,16 +400,19 @@ title: "Kaos Produccion | Puerta"
     $ticket_actions_form.addEventListener('submit', wrapper(on_ticket_actions_form_submit))
     $ticket_actions_dialog_cancel.addEventListener('click', wrapper(on_ticket_actions_dialog_cancel))
     
-    on_init().catch(on_error)
+    wrapper(on_init())()
 
 </script>
 <style>
-    dialog {
-        /* border: none; */
-        box-shadow: 1px 1px 10px black;
-        padding: 1rem;
+    .action-list li {
+        border: 1px solid var(--color-grey-400);
     }
-    dialog > * + * {
-        margin-top: 1rem;
+    .action-list li + li {
+        border-top: none;
+    }
+    .action-list button {
+        border: none;
+        text-align: left;
+        width: 100%;
     }
 </style>

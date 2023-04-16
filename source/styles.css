@@ -1,5 +1,4 @@
-
-/* ========== RESET ========== */
+/* RESET */
 
 *,
 *::before,
@@ -13,15 +12,6 @@ html:focus-within {
   scroll-behavior: smooth;
 }
 
-html {
-  min-height: 100vh;
-}
-
-body {
-  min-height: 100vh;
-  text-rendering: optimizeSpeed;
-}
-
 img, picture, video, canvas, svg {
   max-width: 100%;
   display: block;
@@ -30,7 +20,7 @@ img, picture, video, canvas, svg {
 label, input, textarea, select {
   font: inherit;
   display: block;
-  width: 100%;
+  /* width: 100%; */
 }
 
 p, h1, h2, h3, h4, h5, h6 {
@@ -41,19 +31,16 @@ ul, li {
   list-style: none;
 }
 
-button {
-  font: inherit;
-  display: block;
-  background-color: transparent;
-  border: none;
+a, button {
+  font-family: inherit;
+  font-size: inherit;
   color: inherit;
   cursor: pointer;
 }
 
-a {
-  color: inherit;
+dialog {
+  margin: auto !important;
 }
-
 
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
@@ -70,11 +57,21 @@ a {
   }
 }
 
-/* ========== VARIABLES ========== */
+/* VARIABLES */
 
 :root {
   --font-main: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 
+  --space-100: clamp(0.31rem, calc(0.31rem + 0.00vw), 0.31rem);
+  --space-200: clamp(0.56rem, calc(0.54rem + 0.11vw), 0.63rem);
+  --space-300: clamp(0.88rem, calc(0.85rem + 0.11vw), 0.94rem);
+  --space-400: clamp(1.13rem, calc(1.08rem + 0.22vw), 1.25rem);
+  --space-500: clamp(1.69rem, calc(1.62rem + 0.33vw), 1.88rem);
+  --space-600: clamp(2.25rem, calc(2.16rem + 0.43vw), 2.50rem);
+  --space-700: clamp(3.38rem, calc(3.24rem + 0.65vw), 3.75rem);
+  --space-800: clamp(4.50rem, calc(4.33rem + 0.87vw), 5.00rem);
+  --space-900: clamp(6.75rem, calc(6.49rem + 1.30vw), 7.50rem);
+  
   --text-100: clamp(0.78rem, calc(0.77rem + 0.03vw), 0.80rem);
   --text-200: clamp(0.94rem, calc(0.92rem + 0.11vw), 1.00rem);
   --text-300: clamp(1.13rem, calc(1.08rem + 0.22vw), 1.25rem);
@@ -109,188 +106,135 @@ a {
   --color-grey-950: #030712;
 }
 
-/* ========== BASE ==========  */
+/* BASE */
 
 body {
   font-family: var(--font-main);
   font-size: var(--text-300);
   color: var(--color-grey-800);
   line-height: 1;
-  letter-spacing: .15rem;
+  letter-spacing: .20rem; 
 }
 
-a {
-  color: var(--color-red-500);
-}
-
-input, select, textarea {
-  border: 1px solid var(--color-grey-400);
-  padding: .5rem;
-}
-
-label + input {
-  margin-top: .5rem;
+a, .link {
+  background-color: transparent;
+  text-decoration: underline;
+  border: none;
 }
 
 button, .button {
+  font-size: 16px;
+  letter-spacing: .15rem;
   background-color: var(--color-grey-200);
-  border: 1px solid var(--color-grey-400);
+  border: 2px solid var(--color-grey-400);
+  padding: .5em .75em;
+  color: var(--color-grey-800);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+input, select, textarea {
   width: 100%;
-  padding: .5rem;
-  color: inherit;
-  transition: background-color 200ms ease;
+  border: 2px solid var(--color-grey-400);
+  padding: var(--space-100);
 }
 
-button:hover {
-  background-color: var(--color-grey-300);
+
+dialog {
+  padding: var(--space-300);
+  border: 2px solid var(--color-grey-400);
 }
 
-/* ========== TEXT ========== */
-
-.text-100 {
-  font-weight: normal;
-  font-size: var(--text-100);
-}
-.text-200 {
-  font-weight: normal;
-  font-size: var(--text-200);
-}
-.text-300, h6, p {
-  font-weight: normal;
-  font-size: var(--text-300);
-}
-.text-400, h5 {
-  font-size: var(--text-400);
-}
-.text-500, h4 {
-  font-size: var(--text-500);
-}
-.text-600, h3 {
-  font-size: var(--text-600);
-}
-.text-700, h2 {
-  font-size: var(--text-700);
-}
-.text-800, h1 {
-  font-size: var(--text-800);
+dialog > * + * {
+  margin-top: var(--space-400);
 }
 
-.bold {
-  font-weight: bold;
+
+form > * + * {
+  margin-top: var(--space-200);
 }
 
-/* ========== LAYOUT ========== */
-
-body {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto auto 1fr;
+form > label + input {
+  margin-top: var(--space-100);
 }
 
-/* ----- header ----- */
+form button {
+  width: 100%;
+}
+
+* {
+  /* outline: 1px solid green; */
+}
+
+/* LAYOUT */
 
 #header {
-  background-color: var(--color-grey-900);
-  border-bottom: 8px solid var(--color-red-700);
-  color: var(--color-red-600);
-  font-weight: bold;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
+  padding: var(--space-400);
+  border-bottom: 2px solid var(--color-grey-400);
 }
-
-#header a, 
-#header button {
-  display: block;
-
-  width: auto;
-  
-  font-size: var(--text-500);
-  text-decoration: none;
-  text-align: center;
-  
-  background-color: transparent;
-  padding: .5rem;
-  aspect-ratio: 1;
-  border: none;
-  border-radius: 100%;
-  transition: 
-    background-color 200ms ease,
-    color 200ms ease;
-}
-
-#header a:hover, 
-#header button:hover {
-  background-color: var(--color-red-950);
-  color: var(--color-red-400);
-}
-
-/* ----- navigation ----- */
 
 #navigation {
-  border-bottom: 4px solid var(--color-red-600);
+  padding: var(--space-400);
+  font-size: var(--text-300);
+  border-bottom: 2px solid var(--color-grey-400);
 }
-
-#navigation a {
-  display: block;
-  
-  background-color: var(--color-red-300);
-  color: var(--color-red-800);
-  
-  text-transform: uppercase;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 1rem;
-  transition: 
-    background-color 250ms ease;
-}
-
-#navigation a:hover {
-  background-color: var(--color-red-400);
-}
-
-#navigation li + li {
-  /* border-top: 2px solid var(--color-red-300); */
-}
-
-/* ----- main ----- */
 
 main {
-  padding: 1rem;
-  width: 100%;
-  max-width: 800px;
+  max-width: 60ch;
   margin-inline: auto;
+  padding: var(--space-400);
 }
 
-main > * + *,
-form > * + * {
-  margin-top: 1rem;
+main > * + * {
+  margin-top: var(--space-400);
 }
 
 dialog {
-  margin: auto;
+  padding: var(--space-400);
 }
 
-/* ========== PAGES ========== */
+/* components */
 
-/* ----- Puerta ----- */
-
-.puerta-results > * + * button {
-  border-top: none;
-}
-
-.puerta-actions {
+.actions {
   display: flex;
-  flex-direction: column;
+  gap: var(--space-200);
 }
 
-.puerta-actions > * + * {
-  border-top: none;
+.actions > * {
+  flex-basis: 0;
+  flex-grow: 1;
 }
 
-/* ========== COMPONENTS ========== */
+/* utilities */
 
-/* ========== UTILITIES ========== */
+.p-100 { padding: var(--space-100);}
+.p-200 { padding: var(--space-200);}
+.p-300 { padding: var(--space-300);}
+.p-400 { padding: var(--space-400);}
+.p-500 { padding: var(--space-500);}
+.p-600 { padding: var(--space-600);}
+.p-700 { padding: var(--space-700);}
+.p-800 { padding: var(--space-800);}
+.p-900 { padding: var(--space-900);}
+
+.stack-100 > * + * { margin-top: var(--space-100);}
+.stack-200 > * + * { margin-top: var(--space-200);}
+.stack-300 > * + * { margin-top: var(--space-300);}
+.stack-400 > * + * { margin-top: var(--space-400);}
+.stack-500 > * + * { margin-top: var(--space-500);}
+.stack-600 > * + * { margin-top: var(--space-600);}
+.stack-700 > * + * { margin-top: var(--space-700);}
+.stack-800 > * + * { margin-top: var(--space-800);}
+.stack-900 > * + * { margin-top: var(--space-900);}
+
+.text-100 { font-size: var(--text-100); font-weight: normal; }
+.text-200 { font-size: var(--text-200); font-weight: normal; }
+.text-300, h6, p { font-size: var(--text-300); font-weight: normal; }
+.text-400, h5 { font-size: var(--text-400); }
+.text-500, h4 { font-size: var(--text-500); }
+.text-600, h3 { font-size: var(--text-600); }
+.text-700, h2 { font-size: var(--text-700); }
+.text-800, h1 { text-align: center; font-size: var(--text-800); }
 
 .visually-hidden {
   clip: rect(0 0 0 0);
@@ -306,25 +250,27 @@ dialog {
   text-align: center;
 }
 
-.text-left {
-  text-align: start;
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.no-decoration {
-  text-decoration: none;
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-200);
 }
 
-.inline-block {
-  display: inline-block;
+.square { 
+  aspect-ratio: 1; 
 }
 
-.capitalize {
-  text-transform: capitalize;
+.full-width { 
+  width: 100% 
 }
 
-.stack > * + * {
-  margin-top: var(--stack-space, 1rem);
+* {
+  /* outline: 1px solid red; */
 }
-
-.stack-100 > * + * { --stack-space: .5rem }
-.stack-200 > * + * { --stack-space: 1rem }
