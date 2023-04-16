@@ -323,5 +323,8 @@ dialog {
 }
 
 .stack > * + * {
-  margin-top: 1rem;
+  margin-top: var(--stack-space, 1rem);
 }
+
+.stack-100 > * + * { --stack-space: .5rem }
+.stack-200 > * + * { --stack-space: 1rem }
