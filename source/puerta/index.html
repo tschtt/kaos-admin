@@ -8,7 +8,7 @@ title: "Kaos Produccion | Puerta"
         Puerta
     </h1>
     <!-- Search -->
-    <form>
+    <form id="search-form">
         <label for="name">Nombre</label>
         <input id="search" name="name" type="text" class="full-width" autocomplete="off">
     </form>
@@ -112,7 +112,7 @@ title: "Kaos Produccion | Puerta"
     // constants
     
     const STATUSES = {
-        ACTIVE: 1,
+        PENDING: 1,
         BLOCKED: 2,
         USED: 3,
     }
@@ -125,6 +125,7 @@ title: "Kaos Produccion | Puerta"
     
     // elements
     
+    const $search_form = document.querySelector('#search-form')
     const $search = document.querySelector('#search')
     
     const $ticket_pending_list = document.querySelector('#ticket-pending-list')
@@ -220,7 +221,7 @@ title: "Kaos Produccion | Puerta"
     // renders
     
     function render_tickets(tickets = []) {
-        const tickets_pending = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.ACTIVE)
+        const tickets_pending = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.PENDING)
         const tickets_used = tickets.filter(ticket => ticket.fk_ticket_status === STATUSES.USED)
         
         if(!tickets_pending.length) {
@@ -266,6 +267,32 @@ title: "Kaos Produccion | Puerta"
         render_tickets(tickets)
     }
 
+    function on_search_submit(event) {
+        event.preventDefault()
+        
+        const tickets = filter_tickets(get_tickets(), get_search())
+        
+        if(tickets.length !== 1) {
+            return
+        }
+
+        const ticket = tickets[0]
+
+        if(ticket.fk_ticket_status === STATUSES.PENDING) {
+            $ticket_pending_dialog.querySelector('.dialog-title').innerHTML = ticket.person.name
+            $ticket_pending_dialog.querySelector('.dialog-button').setAttribute('value', ticket.id)
+            $ticket_pending_dialog.showModal()
+            set_selected(ticket)
+            return
+        }
+        if(ticket.fk_ticket_status === STATUSES.USED) {
+            $ticket_used_dialog.querySelector('.dialog-title').innerHTML = ticket.person.name
+            $ticket_used_dialog.querySelector('.dialog-button').setAttribute('value', ticket.id)
+            $ticket_used_dialog.showModal()
+            set_selected(ticket)
+        }
+    }
+
 
     function on_ticket_pending_click(event) {
         const $ticket = event.target.closest('button')
@@ -273,8 +300,7 @@ title: "Kaos Produccion | Puerta"
         if(!$ticket) return
         
         const selected = tickets.find(ticket => ticket.id == $ticket.dataset.ticket)
-        const batch = batches.find(batch => batch.id == selected.fk_batch)
-        
+
         $ticket_pending_dialog.querySelector('.dialog-title').innerHTML = selected.person.name
         $ticket_pending_dialog.querySelector('.dialog-button').setAttribute('value', selected.id)
         $ticket_pending_dialog.showModal()
@@ -287,14 +313,20 @@ title: "Kaos Produccion | Puerta"
     }
     
     async function on_ticket_pending_dialog_submit(event) {
-        let selected, tickets, search
-        selected = get_selected()
-        search = get_search()
+        
+        const selected = get_selected()
         await request_ticket_update(selected.id, { fk_ticket_status: STATUSES.USED })
+
+        set_search('')
+        
+        let tickets
         tickets = set_tickets(await request_tickets())
-        tickets = filter_tickets(tickets, search)
+        tickets = filter_tickets(tickets, '')
         render_tickets(tickets)
+        
+        document.querySelector('h1').scrollIntoView()
         $ticket_pending_dialog.close()
+        $search.focus()
     }
 
 
@@ -318,14 +350,20 @@ title: "Kaos Produccion | Puerta"
     }
 
     async function on_ticket_used_dialog_submit(event) {
-        let selected, tickets, search
-        selected = get_selected()
-        search = get_search()
-        await request_ticket_update(selected.id, { fk_ticket_status: STATUSES.ACTIVE })
+        const selected = get_selected()
+        await request_ticket_update(selected.id, { fk_ticket_status: STATUSES.PENDING })
+        
+        set_search('')
+        
+        let tickets
         tickets = set_tickets(await request_tickets())
-        tickets = filter_tickets(tickets, search)
+        tickets = filter_tickets(tickets, '')
         render_tickets(tickets)
+
+        document.querySelector('h1').scrollIntoView()
         $ticket_used_dialog.close()
+        $search.focus()
+                
     }      
 
 
@@ -352,10 +390,9 @@ title: "Kaos Produccion | Puerta"
     async function on_ticket_actions_form_submit(event) {
         event.preventDefault()
         
-        let selected, search, tickets
+        console.log('event')
         
-        selected = get_selected()
-
+        const selected = get_selected()
         const response = await request_ticket_creation({
             fk_batch: selected.batch.id,
             fk_ticket_status: STATUSES.USED,
@@ -365,12 +402,16 @@ title: "Kaos Produccion | Puerta"
             }
         })
         
-        search = $search.value
+        set_search('')
+        
+        let tickets
         tickets = set_tickets(await request_tickets())
-        tickets = filter_tickets(tickets, search)
+        tickets = filter_tickets(tickets, '')
         render_tickets(tickets)
         
+        document.querySelector('h1').scrollIntoView()
         $ticket_actions_dialog.close()
+        $search.focus()
     }
     
 
@@ -387,6 +428,7 @@ title: "Kaos Produccion | Puerta"
     // init
 
     $search.addEventListener('input', on_search)
+    $search_form.addEventListener('submit', on_search_submit)
 
     $ticket_pending_list.addEventListener('click', wrapper(on_ticket_pending_click))
     $ticket_pending_dialog_submit.addEventListener('click', wrapper(on_ticket_pending_dialog_submit))  
@@ -400,7 +442,7 @@ title: "Kaos Produccion | Puerta"
     $ticket_actions_form.addEventListener('submit', wrapper(on_ticket_actions_form_submit))
     $ticket_actions_dialog_cancel.addEventListener('click', wrapper(on_ticket_actions_dialog_cancel))
     
-    wrapper(on_init())()
+    wrapper(on_init)()
 
 </script>
 <style>
