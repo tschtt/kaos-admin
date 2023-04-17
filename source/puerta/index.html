@@ -64,9 +64,6 @@ title: "Kaos Produccion | Puerta"
         <h2 class="dialog-title text-500 text-center capitalize">
             Nueva entrada
         </h2>
-        <p class="text-center">
-            Se volverá a marcar a la persona como pendiente.
-        </p>
         <form id="ticket-actions-form">
             <label for="name">Nombre</label>
             <input type="text" name="name" id="name">
@@ -399,8 +396,6 @@ title: "Kaos Produccion | Puerta"
 
     async function on_ticket_actions_form_submit(event) {
         event.preventDefault()
-        
-        console.log('event')
         
         const selected = get_selected()
         const response = await request_ticket_creation({
