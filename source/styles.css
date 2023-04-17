@@ -162,10 +162,6 @@ form button {
   width: 100%;
 }
 
-* {
-  /* outline: 1px solid green; */
-}
-
 /* LAYOUT */
 
 #header {
@@ -174,9 +170,18 @@ form button {
 }
 
 #navigation {
-  padding: var(--space-400);
   font-size: var(--text-300);
   border-bottom: 2px solid var(--color-grey-400);
+}
+
+#navigation li + li {
+  border-top: 2px solid var(--color-grey-400);
+}
+
+#navigation a {
+  text-decoration: none;
+  display: block;
+  padding: var(--space-400);
 }
 
 main {
