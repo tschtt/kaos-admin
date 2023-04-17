@@ -211,7 +211,17 @@ title: "Kaos Produccion | Puerta"
     // filters 
 
     function filter_tickets(tickets = [], value) {
-        return tickets.filter(ticket => ticket.person.name.toLowerCase().includes(value.toLowerCase()))
+        return tickets
+            .filter(ticket => ticket.person.name.toLowerCase().includes(value.toLowerCase()))
+            .sort((ticket_a, ticket_b) => {
+                if (ticket_a.name > ticket_b.name) {
+                    return 1;
+                }
+                if (ticket_a.value < ticket_b.value) {
+                    return -1;
+                }
+                return 0;
+            })
     }
     
     function find_batch(name) {
