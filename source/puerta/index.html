@@ -241,7 +241,7 @@ title: "Kaos Produccion | Puerta"
             $ticket_pending_list.querySelector('ul').innerHTML = tickets_pending.map(ticket => {
                 return `
                 <li>
-                    <button class="ticket ticket-pending text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
+                    <button class="ticket ticket-pending text-left" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
                         ${ ticket.person.name.toLowerCase() }
                     </button>
                 </li>
@@ -257,7 +257,7 @@ title: "Kaos Produccion | Puerta"
             $ticket_used_list.querySelector('ul').innerHTML = tickets_used.map(ticket => {
                 return `
                 <li>
-                    <button class="ticket ticket-used text-left capitalize" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
+                    <button class="ticket ticket-used text-left" data-ticket="${ticket.id}" data-ticket-state="${ticket.fk_ticket_state}">
                         ${ ticket.person.name.toLowerCase() }
                     </button>
                 </li>
