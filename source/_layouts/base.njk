@@ -17,8 +17,8 @@
         </header>
         <nav id="navigation" hidden>
             <ul class="stack-100">
-                <li><a href="/lista">Lista</a></li>
-                <li><a href="/puerta">Puerta</a></li>
+                <li only="producer"><a href="/lista">Lista</a></li>
+                <li only="staff"><a href="/puerta">Puerta</a></li>
             </ul>
         </nav>
         {{ content | safe }}

@@ -19,6 +19,18 @@ export function set_session(session) {
     refresh_token = session.refresh_token
     window.localStorage.setItem('refresh_token', session.refresh_token)
     window.localStorage.setItem('user', session.user)
+
+    switch (session.user.role.name) {
+        case 'producer':
+            document.body.querySelectorAll('[only=admin]').forEach(element => element.remove())
+            break;
+        case 'staff':
+            document.body.querySelectorAll('[only=admin]').forEach(element => element.remove())
+            document.body.querySelectorAll('[only=producer]').forEach(element => element.remove())
+            break;
+        default:
+            break;
+    }
 }
 
 export async function refresh_session() {

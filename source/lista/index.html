@@ -39,7 +39,7 @@ title: "Kaos Produccion | Lista"
         const body = new FormData(event.target)
         
         const response = await request({
-            url: '/tickets/import',
+            url: '/xlsx/tickets',
             method: 'POST',
             body,
         })
