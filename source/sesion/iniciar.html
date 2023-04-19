@@ -19,7 +19,7 @@ title: "Kaos Producción | Login"
         </button>
     </div>
   <script type="module">
-    import { request, set_session } from '/_scripts/request.js'
+    import { request, set_session, wrapper } from '/_scripts/request.js'
     
     const $form = document.querySelector('#LoginForm')
 
@@ -43,6 +43,6 @@ title: "Kaos Producción | Login"
         window.location.replace('/')
     }
     
-    $form.addEventListener('submit', on_submit)
+    $form.addEventListener('submit', wrapper(on_submit))
   </script>
 </main>

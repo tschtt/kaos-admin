@@ -85,27 +85,8 @@ title: "Kaos Produccion | Puerta"
     </dialog>
 </main>
 <script type="module">
-    import { request, refresh_session } from '/_scripts/request.js'
+    import { request, refresh_session, wrapper } from '/_scripts/request.js'
 
-    // helpers
-
-    function wrapper(listener) {
-        return async function (event) {
-            try {
-                await listener(event)
-            } catch (error) {
-                switch (error.name) {
-                    case 'UnauthorizedError':
-                        return location.assign('/sesion/iniciar')
-                        break;
-                    default:
-                        console.log(error)
-                        break;
-                }
-            }
-        }
-    }
-    
     // constants
     
     const STATUSES = {

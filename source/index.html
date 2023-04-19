@@ -9,24 +9,13 @@ title: "Kaos Producción"
     </h1>
 </main>
 <script type="module">
-    import { refresh_session } from '/_scripts/request.js'
+    import { refresh_session, wrapper } from '/_scripts/request.js'
 
     const $welcome = document.querySelector('#welcome')
     
-    async function on_error(error) {
-        switch (error.name) {
-            case 'UnauthorizedError':
-                return location.assign('/sesion/iniciar')
-                break;
-            default:
-                console.log(error)
-                break;
-        }
-    }
-
     async function on_init() {
         await refresh_session()
     }
 
-    on_init().catch(on_error)
+    wrapper(on_init)()
 </script>

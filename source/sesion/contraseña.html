@@ -1,0 +1,88 @@
+---
+layout: "login.njk"
+title: "Kaos Producción | Contraseña"
+---
+
+<main>
+    <h1 class="text-center">
+        Cambiar Contraseña
+    </h1>
+    <form id="form">
+        <label for="password">Nueva Contraseña</label>
+        <input type="Password" id="password" name="password" required>
+        <label for="confirm">Confirmar Contraseña</label>
+        <input type="Password" id="confirm" name="confirm" required>
+    </form>
+    <div class="actions">
+        <button type="submit" form="form" class="full-width">
+            Guardar
+        </button>
+    </div>
+</main>
+<script type="module">
+    import { request, set_session, wrapper } from '/_scripts/request.js'
+    
+    const $form = document.querySelector('#form')
+
+    const state = {
+        reset_token: ''
+    }
+    
+    function get_reset_token() {
+        return state.reset_token
+    }
+
+    function set_reset_token(value) {
+        state.reset_token = value
+    }
+    
+    async function on_submit(event) {
+        event.preventDefault()
+        
+        const reset_token = get_reset_token()
+        
+        const password = $form.elements.password.value
+        const confirm = $form.elements.confirm.value
+
+        if(!password) {
+            alert('El campo "Nueva Contraseña" es obligatorio')
+        }
+
+        if(!confirm) {
+            alert('El campo "Confirmar Contraseña" es obligatorio')
+        }
+
+        if(password != confirm) {
+            alert('Las contraseñas no coinciden')
+        }
+        
+        const session = await request({
+            url: '/session/password',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${reset_token}`
+            },
+            body: {
+                password,
+            }
+        })
+
+        window.localStorage.clear()
+        location.href = '/sesion/iniciar'
+    }
+    
+    function on_init() {
+        const query = new URLSearchParams(window.location.search)
+        const reset_token = query.get('token')
+
+        if(!reset_token) {
+            return location.assign('/sesion/iniciar')
+        }
+        
+        set_reset_token(reset_token)
+    }
+    
+    $form.addEventListener('submit', wrapper(on_submit))
+
+    wrapper(on_init)()
+</script>

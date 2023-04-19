@@ -18,20 +18,9 @@ title: "Kaos Produccion | Lista"
     </div>
 </main>
 <script type="module">
-    import { request, refresh_session } from '/_scripts/request.js'
+    import { request, refresh_session, wrapper } from '/_scripts/request.js'
 
     const $form = document.querySelector('#form')
-    
-    async function on_error(error) {
-        switch (error.name) {
-            case 'UnauthorizedError':
-                return location.assign('/sesion/iniciar')
-                break;
-            default:
-                console.log(error)
-                break;
-        }
-    }
 
     async function on_submit(event) {
         event.preventDefault()
@@ -51,7 +40,7 @@ title: "Kaos Produccion | Lista"
         await refresh_session()
     }
 
-    $form.addEventListener('submit', (event) => on_submit(event).catch(on_error))
+    $form.addEventListener('submit', wrapper(on_submit))
     
-    on_init().catch(on_error)
+    wrapper(on_init)()
 </script>

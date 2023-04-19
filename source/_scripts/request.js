@@ -1,18 +1,32 @@
 
-const BASE = 'http://api.kaosrave.com'
+// const BASE = 'http://api.kaosrave.com'
+const BASE = 'http://localhost:3333'
 
-let access_token
-let refresh_token = window.localStorage.getItem('refresh_token')
+// errors
 
-class UnauthorizedError extends Error {
-  constructor() {
-    super('No tenes permiso para acceder a este recurso')
-    this.name = 'UnauthorizedError'
+class RequestError extends Error {
+  constructor(response, data = {}) {
+    super(data.message || response.statusText)
+    this.name = response.statusText
+    this.status = response.status
+    this.data = data
+    if(Error.captureStackTrace) {
+      Error.captureStackTrace(this, RequestError)
+    }
+  }
+}
+
+class UnauthorizedError extends RequestError {
+  constructor(message) {
+    super({ status: 401, statusText: 'Unauthorized' }, { message: message || 'Unauthorized' })
     if(Error.captureStackTrace) {
       Error.captureStackTrace(this, UnauthorizedError)
     }
   }
 }
+
+let access_token
+let refresh_token = window.localStorage.getItem('refresh_token')
 
 export function set_session(session) {
     access_token = session.access_token
@@ -49,19 +63,19 @@ export async function refresh_session() {
     const session = await response.json()
 
     if(!response.ok) {
-        throw new UnauthorizedError()
+        throw new RequestError(response, session)
     }
 
     set_session(session)
     return session
 }
 
-export async function request ({ url, method, body }) {
+export async function request ({ url, method, headers = {}, body }) {
     // request options
     
     const options = {
         method,
-        headers: {},
+        headers,
     }
 
     if(access_token) {
@@ -98,7 +112,7 @@ export async function request ({ url, method, body }) {
         
         // retry
         if(!refresh_response.ok) {
-            throw new UnauthorizedError()
+            throw new RequestError(response, data)
         }
         
         set_session(session)
@@ -109,10 +123,28 @@ export async function request ({ url, method, body }) {
 
 
     if(!response.ok) {
-        throw new Error(data && data.message || response.status)
+        console.log(response)
+        console.log(data)
+        throw new RequestError(response, data)
     }
 
     return data
+}
+
+export function wrapper(listener) {
+    return async function (event) {
+        try {
+            await listener(event)
+        } catch (error) {
+            if(error.name === 'Unauthorized') {
+                return location.href = '/sesion/iniciar'
+            }
+            if(error.name === 'Forbidden' && error.data.reset_token) {
+                return location.href = `/sesion/contraseña/?token=${error.data.reset_token}`
+            }
+            alert(error)
+        }
+    }
 }
 
 export default request
