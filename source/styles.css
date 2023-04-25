@@ -205,7 +205,7 @@ body {
   border: 1px solid white;
   font-size: var(--text-200);
   transition: opacity 100ms;
-  width: max-content;
+  width: min(max-content, 100%);
   margin-left: auto;
 }
 

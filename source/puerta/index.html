@@ -301,7 +301,6 @@ title: "Kaos Produccion | Puerta"
     }
     
     async function on_ticket_pending_dialog_submit(event) {
-        
         const selected = get_selected()
         await request_ticket_update(selected.id, { fk_ticket_status: STATUSES.USED })
         
@@ -316,7 +315,7 @@ title: "Kaos Produccion | Puerta"
 
         document.querySelector('h1').scrollIntoView()
         $ticket_pending_dialog.close()
-        $search.focus()
+        // $search.focus()
     }
 
 
@@ -354,7 +353,7 @@ title: "Kaos Produccion | Puerta"
 
         document.querySelector('h1').scrollIntoView()
         $ticket_used_dialog.close()
-        $search.focus()
+        // $search.focus()
                 
     }      
 
@@ -403,7 +402,7 @@ title: "Kaos Produccion | Puerta"
 
         document.querySelector('h1').scrollIntoView()
         $ticket_actions_dialog.close()
-        $search.focus()
+        // $search.focus()
     }
     
 
