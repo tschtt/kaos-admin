@@ -192,10 +192,10 @@ title: "Kaos Produccion | Puerta"
         return tickets
             .filter(ticket => ticket.person.name.toLowerCase().includes(value.toLowerCase()))
             .sort((ticket_a, ticket_b) => {
-                if (ticket_a.name > ticket_b.name) {
+                if (ticket_a.person.name > ticket_b.person.name) {
                     return 1;
                 }
-                if (ticket_a.value < ticket_b.value) {
+                if (ticket_a.person.name < ticket_b.person.name) {
                     return -1;
                 }
                 return 0;
