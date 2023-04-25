@@ -1,5 +1,5 @@
 
-const BASE = 'http://api.kaosrave.com'
+const BASE = 'https://api.kaosrave.com'
 // const BASE = 'http://localhost:3333'
 
 // errors
