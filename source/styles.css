@@ -60,6 +60,8 @@ dialog {
 /* VARIABLES */
 
 :root {
+  color-scheme: dark;
+
   --font-main: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 
   --space-100: clamp(0.31rem, calc(0.31rem + 0.00vw), 0.31rem);
@@ -111,8 +113,8 @@ dialog {
 body {
   font-family: var(--font-main);
   font-size: var(--text-300);
-  color: var(--color-grey-800);
-  line-height: 1;
+  /* color: var(--color-grey-800); */
+  line-height: 1.2;
   letter-spacing: .20rem; 
 }
 
@@ -125,10 +127,10 @@ a, .link {
 button, .button {
   font-size: 16px;
   letter-spacing: .15rem;
-  background-color: var(--color-grey-200);
+  /* background-color: var(--color-grey-200); */
   border: 2px solid var(--color-grey-400);
   padding: .5em .75em;
-  color: var(--color-grey-800);
+  /* color: var(--color-grey-800); */
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -164,6 +166,10 @@ form button {
 
 /* LAYOUT */
 
+body {
+  /* position: relative; */
+}
+
 #header {
   padding: var(--space-400);
   border-bottom: 2px solid var(--color-grey-400);
@@ -182,6 +188,25 @@ form button {
   text-decoration: none;
   display: block;
   padding: var(--space-400);
+}
+
+#notifications {
+  position: fixed;
+  max-width: 60ch;
+  padding: 1rem;
+  right: 0;
+  bottom: 0;
+}
+
+.notification {
+  padding: 1rem;
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  font-size: var(--text-200);
+  transition: opacity 100ms;
+  width: max-content;
+  margin-left: auto;
 }
 
 main {
@@ -210,6 +235,11 @@ dialog {
   flex-grow: 1;
 }
 
+.article {
+  width: max-content;
+  margin-inline: auto;
+}
+
 /* utilities */
 
 .p-100 { padding: var(--space-100);}
@@ -234,7 +264,7 @@ dialog {
 
 .text-100 { font-size: var(--text-100); font-weight: normal; }
 .text-200 { font-size: var(--text-200); font-weight: normal; }
-.text-300, h6, p { font-size: var(--text-300); font-weight: normal; }
+.text-300, h6 { font-size: var(--text-300); font-weight: normal; }
 .text-400, h5 { font-size: var(--text-400); }
 .text-500, h4 { font-size: var(--text-500); }
 .text-600, h3 { font-size: var(--text-600); }
@@ -249,6 +279,10 @@ dialog {
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+.block {
+  display: block;
 }
 
 .text-center {

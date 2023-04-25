@@ -1,6 +1,6 @@
 
-// const BASE = 'http://api.kaosrave.com'
-const BASE = 'http://localhost:3333'
+const BASE = 'http://api.kaosrave.com'
+// const BASE = 'http://localhost:3333'
 
 // errors
 
@@ -131,6 +131,18 @@ export async function request ({ url, method, headers = {}, body }) {
     return data
 }
 
+export function alert(message) {
+    const $notifications = document.querySelector('#notifications')
+    const $notification = document.createElement('div')
+    $notification.className = 'notification'
+    $notification.innerHTML = message
+    $notifications.appendChild($notification)
+
+    setTimeout(() => {
+        $notification.remove()
+    }, 4000)
+}
+
 export function wrapper(listener) {
     return async function (event) {
         try {
@@ -142,7 +154,7 @@ export function wrapper(listener) {
             if(error.name === 'Forbidden' && error.data.reset_token) {
                 return location.href = `/sesion/contraseña/?token=${error.data.reset_token}`
             }
-            alert(error)
+            alert(error.message)            
         }
     }
 }

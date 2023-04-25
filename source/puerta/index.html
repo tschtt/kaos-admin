@@ -85,7 +85,7 @@ title: "Kaos Produccion | Puerta"
     </dialog>
 </main>
 <script type="module">
-    import { request, refresh_session, wrapper } from '/_scripts/request.js'
+    import { alert, request, refresh_session, wrapper } from '/_scripts/request.js'
 
     // constants
     
@@ -304,7 +304,7 @@ title: "Kaos Produccion | Puerta"
         
         const selected = get_selected()
         await request_ticket_update(selected.id, { fk_ticket_status: STATUSES.USED })
-
+        
         set_search('')
         
         let tickets
@@ -312,6 +312,8 @@ title: "Kaos Produccion | Puerta"
         tickets = filter_tickets(tickets, '')
         render_tickets(tickets)
         
+        alert(`Se marcó el ingreso de ${selected.person.name}`)
+
         document.querySelector('h1').scrollIntoView()
         $ticket_pending_dialog.close()
         $search.focus()
@@ -347,6 +349,8 @@ title: "Kaos Produccion | Puerta"
         tickets = set_tickets(await request_tickets())
         tickets = filter_tickets(tickets, '')
         render_tickets(tickets)
+
+        alert(`Se revirtió el ingreso de ${selected.person.name}`)
 
         document.querySelector('h1').scrollIntoView()
         $ticket_used_dialog.close()
@@ -395,6 +399,8 @@ title: "Kaos Produccion | Puerta"
         tickets = filter_tickets(tickets, '')
         render_tickets(tickets)
         
+        alert(`Se marcó el ingreso de ${$ticket_actions_form.elements.name.value}`)
+
         document.querySelector('h1').scrollIntoView()
         $ticket_actions_dialog.close()
         $search.focus()
